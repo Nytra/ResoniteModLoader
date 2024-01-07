@@ -29,13 +29,19 @@ internal static class AssemblyLoader {
 		return assembliesToLoad;
 	}
 
+	private static Assembly LoadAssemblyFromBytes(string filepath)
+	{
+		byte[] bytes = File.ReadAllBytes(filepath);
+		return Assembly.Load(bytes);
+	}
+
 	private static Assembly? LoadAssembly(string filepath) {
 		string filename = Path.GetFileName(filepath);
 		LoadProgressIndicator.SetCustom($"Loading file: {filename}");
 		Assembly assembly;
 		try {
 			Logger.DebugFuncInternal(() => $"Load assembly {filename}");
-			assembly = Assembly.LoadFrom(filepath);
+			assembly = LoadAssemblyFromBytes(filepath);
 		} catch (Exception e) {
 			Logger.ErrorInternal($"Error loading assembly from {filepath}: {e}");
 			return null;
